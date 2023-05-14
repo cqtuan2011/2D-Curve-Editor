@@ -9,6 +9,24 @@ public class PathEditor : Editor
     PathCreator creator;
     Path path;
 
+    public override void OnInspectorGUI()
+    {
+        base.OnInspectorGUI();
+
+        if (GUILayout.Button("Create New"))
+        {
+            creator.CreatePath();
+            path = creator.path;
+            SceneView.RepaintAll();
+        }
+
+        if (GUILayout.Button("Toggle Closed"))
+        {
+            path.ToggleClosed();
+            SceneView.RepaintAll();
+        }
+    }
+
     private void OnSceneGUI()
     {
         Draw();
@@ -42,9 +60,11 @@ public class PathEditor : Editor
 
 
         //Draw red handle which can be moved by hand
-        Handles.color = Color.red;
+        //Handles.color = Color.red;
         for (int i = 0; i < path.NumPoints; i++)
         {
+            Color color = i % 3 == 0? Color.yellow: Color.red;
+            Handles.color = color;
             Vector2 newPos = Handles.FreeMoveHandle(path[i], Quaternion.identity, .1f, Vector2.zero, Handles.CylinderHandleCap);
 
             // check if the red handle is being moved
